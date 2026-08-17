@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #0a0a0a; color: #e6e6e6; font-family: 'Inter', system-ui, sans-serif; }
+  a { color: #7dd3fc; text-decoration: none; }
+  a:hover { color: #38bdf8; }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; display: flex; background: radial-gradient(1200px 500px at 60% -10%, rgba(120,20,20,0.18), transparent 60%), #0a0a0a;">
+
+  <!-- Sidebar -->
+  <aside style="width: 240px; padding: 24px 20px; display: flex; flex-direction: column; gap: 8px; border-right: 1px solid #171717; flex-shrink: 0;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding: 4px 8px 24px;">
+      <div style="font-weight:700; font-size:16px; letter-spacing:-0.02em; line-height:1.1;">invent<br>money</div>
+      <span style="width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; background:#161616; border:1px solid #262626; border-radius:6px; color:#8a8a8a; font-size:11px;">‹</span>
+    </div>
+
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+      <div style="display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:8px; font-size:14px; color:{{ n.color }}; background:{{ n.bg }}; cursor:pointer;">
+        <span style="width:18px; text-align:center;">{{ n.icon }}</span>
+        <span>{{ n.label }}</span>
+      </div>
+    </sc-for>
+
+    <div style="margin-top:auto; padding-top:16px; border-top:1px solid #171717; display:flex; align-items:center; gap:10px;">
+      <span style="width:28px; height:28px; border-radius:6px; background:#22c55e; color:#000; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;">DO</span>
+      <span style="font-size:14px;">Doleta</span>
+      <span style="margin-left:auto; color:#8a8a8a;">⇅</span>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main style="flex:1; padding: 24px 32px 80px; min-width: 0;">
+
+    <!-- Top bar -->
+    <div style="display:flex; justify-content:flex-end; gap:10px; align-items:center; margin-bottom: 24px; font-size:13px;">
+      <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.25); border-radius:8px; color:#4ade80;">🛡 Fornecedor Train AI verificado</span>
+      <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:#161616; border:1px solid #262626; border-radius:8px;">🔥 3</span>
+      <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:#161616; border:1px solid #262626; border-radius:8px;"><span style="color:#4ade80;">$USD</span> <strong>0,00</strong></span>
+      <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:#161616; border:1px solid #262626; border-radius:8px;"><span style="color:#fb923c;">$INVENT</span> <strong>20,00</strong> <span style="color:#7a7a7a;">ⓘ</span></span>
+      <span style="width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; background:#161616; border:1px solid #262626; border-radius:8px;">🔔</span>
+    </div>
+
+    <!-- Grid -->
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+      <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="9">
+        <div onClick="{{ t.open }}" style="background:#0f0f0f; border:1px solid #1a1a1a; border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:14px; min-height: 240px; cursor:pointer; transition: border-color 0.15s;" style-hover="border-color:#2a2a2a">
+          <div style="display:flex; gap:8px;">
+            <span style="display:inline-flex; align-items:center; gap:6px; padding:4px 10px; background:#161616; border:1px solid #262626; border-radius:6px; font-size:12px; color:#a0a0a0;">🎥 Vídeo</span>
+            <sc-if value="{{ t.sent }}" hint-placeholder-val="{{ false }}">
+              <span style="display:inline-flex; align-items:center; gap:6px; padding:4px 10px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.25); border-radius:6px; font-size:12px; color:#4ade80;">✓ {{ t.sent }} enviados</span>
+            </sc-if>
+          </div>
+          <h3 style="margin:0; font-size:17px; font-weight:700; line-height:1.3;">{{ t.titulo }}</h3>
+          <p style="margin:0; font-size:13px; line-height:1.5; color:#8a8a8a; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ t.descricao }}</p>
+          <div style="margin-top:auto; display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; color:#4ade80; font-weight:700; font-size:14px;">
+              <span>💵</span><span>${{ t.valor }} / hora aprovada</span>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:8px; color:#6a6a6a; font-size:12px; line-height:1.5;">
+              <span>🕐</span>
+              <div>
+                <div>Grave entre {{ t.min }} min e 120 min.</div>
+                <div>Mantenha o arquivo abaixo de 75 GB.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+  </main>
+
+  <!-- Modal -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:100; display:flex; align-items:center; justify-content:center; padding: 40px;">
+      <div onClick="{{ stopProp }}" style="background:#0f0f0f; border:1px solid #1f1f1f; border-radius:16px; width: 100%; max-width: 1280px; max-height: 90vh; overflow-y: auto; display:flex; flex-direction:column;">
+        <div style="display:flex; gap:24px; padding: 20px 28px 0; border-bottom:1px solid #1f1f1f; position:sticky; top:0; background:#0f0f0f; z-index:2;">
+          <div style="padding-bottom:14px; border-bottom:2px solid #fff; font-weight:600; font-size:14px;">Detalhes</div>
+          <div style="padding-bottom:14px; color:#7a7a7a; font-size:14px; cursor:pointer;">FAQ</div>
+          <div style="margin-left:auto; margin-bottom:8px;">
+            <span onClick="{{ closeModal }}" style="display:inline-flex; width:32px; height:32px; align-items:center; justify-content:center; background:#dc2626; border-radius:6px; cursor:pointer; color:#fff; font-weight:700;">✕</span>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 380px; gap: 32px; padding: 28px;">
+          <div style="min-width:0; display:flex; flex-direction:column; gap:28px;">
+
+            <div>
+              <span style="display:inline-block; padding:4px 10px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:999px; color:#4ade80; font-size:12px; font-weight:600; margin-bottom:14px;">${{ activeTask.valor }} / hora aprovada</span>
+              <h1 style="margin:0 0 12px; font-size:22px; font-weight:700;">{{ activeTask.tituloLong }}</h1>
+              <p style="margin:0; font-size:14px; line-height:1.6; color:#b5b5b5;">{{ activeTask.descLong }}</p>
+            </div>
+
+            <sc-if value="{{ activeTask.hasDetail }}" hint-placeholder-val="{{ true }}">
+            <div style="height:1px; background:#1f1f1f;"></div>
+
+            <!-- EQUIPAMENTO -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:700; letter-spacing:0.1em; color:#7a7a7a; margin-bottom:16px;">
+                <span>EQUIPAMENTO</span><span>⌃</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:16px;">
+                <div style="display:flex; align-items:flex-start; gap:12px;">
+                  <span>📷</span>
+                  <div style="flex:1; font-size:14px;">Use um aparelho aprovado (iPhone 11+, Pixel 6+, Galaxy S21+)</div>
+                  <span style="padding:2px 8px; background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.3); border-radius:4px; font-size:11px; color:#fb923c; font-weight:700; letter-spacing:0.05em;">OBRIGATÓRIO</span>
+                </div>
+                <div style="display:flex; align-items:flex-start; gap:12px;">
+                  <span>📱</span>
+                  <div style="flex:1; font-size:14px;">
+                    Suporte de cabeça ou faixa para gravar sem usar as mãos
+                    <div style="color:#7a7a7a; font-size:12px; margin-top:4px;">Uma faixa caseira bem ajustada resolve.</div>
+                  </div>
+                  <span style="padding:2px 8px; background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.3); border-radius:4px; font-size:11px; color:#fb923c; font-weight:700; letter-spacing:0.05em;">OBRIGATÓRIO</span>
+                </div>
+                <div style="display:flex; align-items:flex-start; gap:12px;">
+                  <span>🔧</span>
+                  <div style="flex:1; font-size:14px;">As duas mãos devem ficar visíveis enquanto você trabalha</div>
+                  <span style="padding:2px 8px; background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.3); border-radius:4px; font-size:11px; color:#fb923c; font-weight:700; letter-spacing:0.05em;">OBRIGATÓRIO</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="height:1px; background:#1f1f1f;"></div>
+
+            <!-- INSTRUÇÕES -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:700; letter-spacing:0.1em; color:#7a7a7a; margin-bottom:16px;">
+                <span>INSTRUÇÕES</span><span>⌃</span>
+              </div>
+              <div style="display:inline-flex; background:#161616; border:1px solid #262626; border-radius:8px; padding:4px; margin-bottom:20px;">
+                <div onClick="{{ setTabHow }}" style="padding:6px 14px; background:{{ tabHowBg }}; color:{{ tabHowColor }}; border-radius:6px; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:6px;">📱 Como gravar</div>
+                <div onClick="{{ setTabWhat }}" style="padding:6px 14px; background:{{ tabWhatBg }}; color:{{ tabWhatColor }}; border-radius:6px; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:6px;">📄 O que vale</div>
+              </div>
+
+              <sc-if value="{{ showHow }}" hint-placeholder-val="{{ true }}">
+                <div>
+                  <h3 style="margin:0 0 12px; font-size:17px; font-weight:700;">Antes de gravar</h3>
+                  <ul style="margin:0 0 24px; padding-left:20px; font-size:14px; line-height:1.7; color:#c5c5c5;">
+                    <sc-for list="{{ activeTask.before }}" as="b" hint-placeholder-count="5"><li>{{ b }}</li></sc-for>
+                  </ul>
+
+                  <h3 style="margin:0 0 12px; font-size:17px; font-weight:700;">Durante a gravação</h3>
+                  <ul style="margin:0 0 24px; padding-left:20px; font-size:14px; line-height:1.7; color:#c5c5c5;">
+                    <sc-for list="{{ activeTask.while_ }}" as="w" hint-placeholder-count="5"><li>{{ w }}</li></sc-for>
+                  </ul>
+
+                  <h3 style="margin:0 0 12px; font-size:17px; font-weight:700;">Depois de gravar</h3>
+                  <ul style="margin:0; padding-left:20px; font-size:14px; line-height:1.7; color:#c5c5c5;">
+                    <sc-for list="{{ activeTask.after }}" as="a" hint-placeholder-count="2"><li>{{ a }}</li></sc-for>
+                  </ul>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ showWhat }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <h3 style="margin:0 0 12px; font-size:17px; font-weight:700;">{{ activeTask.whatTitle }}</h3>
+                  <p style="margin:0 0 14px; font-size:14px; line-height:1.6; color:#c5c5c5;">Grave qualquer uma destas atividades do começo ao fim. Uma tarefa por vídeo.</p>
+                  <ul style="margin:0 0 16px; padding-left:20px; font-size:14px; line-height:1.7; color:#c5c5c5;">
+                    <sc-for list="{{ activeTask.counts }}" as="c" hint-placeholder-count="5"><li>{{ c }}</li></sc-for>
+                  </ul>
+                  <p style="margin:0 0 24px; font-size:14px; color:#c5c5c5;"><strong>Onde:</strong> {{ activeTask.where }}</p>
+
+                  <h3 style="margin:0 0 12px; font-size:17px; font-weight:700;">Não aceito</h3>
+                  <ul style="margin:0 0 24px; padding-left:20px; font-size:14px; line-height:1.7; color:#c5c5c5;">
+                    <sc-for list="{{ activeTask.notAccepted }}" as="n" hint-placeholder-count="8"><li>{{ n }}</li></sc-for>
+                  </ul>
+
+                  <h3 style="margin:0 0 12px; font-size:17px; font-weight:700;">{{ activeTask.clipTitle }}</h3>
+                  <sc-for list="{{ activeTask.clipBody }}" as="p" hint-placeholder-count="4">
+                    <sc-if value="{{ p.paragraph }}" hint-placeholder-val="{{ false }}">
+                      <p style="margin:0 0 12px; font-size:14px; line-height:1.6; color:#c5c5c5;">{{ p.paragraph }}</p>
+                    </sc-if>
+                    <sc-if value="{{ p.ol }}" hint-placeholder-val="{{ false }}">
+                      <ol style="margin:0 0 16px; padding-left:20px; font-size:14px; line-height:1.7; color:#c5c5c5;">
+                        <sc-for list="{{ p.ol }}" as="i" hint-placeholder-count="3"><li>{{ i }}</li></sc-for>
+                      </ol>
+                    </sc-if>
+                    <sc-if value="{{ p.ul }}" hint-placeholder-val="{{ false }}">
+                      <ul style="margin:0 0 16px; padding-left:20px; font-size:14px; line-height:1.7; color:#c5c5c5;">
+                        <sc-for list="{{ p.ul }}" as="i" hint-placeholder-count="3"><li>{{ i }}</li></sc-for>
+                      </ul>
+                    </sc-if>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+
+            <div style="height:1px; background:#1f1f1f;"></div>
+
+            <!-- O QUE BUSCAMOS -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:700; letter-spacing:0.1em; color:#7a7a7a; margin-bottom:16px;">
+                <span>O QUE BUSCAMOS</span><span>⌃</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:14px; font-size:14px; color:#e5e5e5;">
+                <sc-for list="{{ activeTask.buscamos }}" as="b" hint-placeholder-count="10">
+                  <div style="display:flex; gap:12px;">
+                    <span style="color:#4ade80;">◉</span>
+                    <div>{{ b.text }}
+                      <sc-if value="{{ b.sub }}" hint-placeholder-val="{{ false }}">
+                        <div style="color:#7a7a7a; font-size:12px; margin-top:2px;">{{ b.sub }}</div>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="height:1px; background:#1f1f1f;"></div>
+
+            <!-- PERMITIDO E EVITE -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:700; letter-spacing:0.1em; color:#7a7a7a; margin-bottom:16px;">
+                <span>PERMITIDO E EVITE</span><span>⌃</span>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                <div style="background:rgba(34,197,94,0.05); border:1px solid rgba(34,197,94,0.15); border-radius:10px; padding:16px;">
+                  <div style="color:#4ade80; font-weight:700; font-size:13px; margin-bottom:12px; letter-spacing:0.05em;">PERMITIDO</div>
+                  <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:#e5e5e5;">
+                    <sc-for list="{{ activeTask.allowed }}" as="a" hint-placeholder-count="5">
+                      <div style="display:flex; gap:8px;"><span style="color:#4ade80;">✓</span><div>{{ a }}</div></div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="background:rgba(220,38,38,0.05); border:1px solid rgba(220,38,38,0.15); border-radius:10px; padding:16px;">
+                  <div style="color:#f87171; font-weight:700; font-size:13px; margin-bottom:12px; letter-spacing:0.05em;">EVITE</div>
+                  <div style="display:flex; flex-direction:column; gap:10px; font-size:14px; color:#e5e5e5;">
+                    <sc-for list="{{ activeTask.avoid }}" as="a" hint-placeholder-count="8">
+                      <div style="display:flex; gap:8px;"><span style="color:#f87171;">✕</span><div>{{ a }}</div></div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="height:1px; background:#1f1f1f;"></div>
+
+            <!-- EXEMPLOS -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:700; letter-spacing:0.1em; color:#7a7a7a; margin-bottom:16px;">
+                <span>EXEMPLOS</span><span>⌃</span>
+              </div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                <div>
+                  <div style="color:#4ade80; font-weight:600; font-size:13px; margin-bottom:10px;">✓ Bom</div>
+                  <div style="aspect-ratio: 4/3; background: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 8px, #141414 8px, #141414 16px); border-radius:8px; padding:10px; position:relative;">
+                    <span style="width:24px; height:24px; background:#22c55e; border-radius:999px; display:flex; align-items:center; justify-content:center; color:#000; font-weight:700;">✓</span>
+                    <span style="position:absolute; bottom:10px; left:10px; font-family:monospace; font-size:11px; color:#6a6a6a;">[ foto de exemplo bom ]</span>
+                  </div>
+                  <div style="font-size:13px; color:#9a9a9a; margin-top:8px;">Duas mãos visíveis, tarefa clara, imagem nítida.</div>
+                </div>
+                <div>
+                  <div style="color:#f87171; font-weight:600; font-size:13px; margin-bottom:10px;">✕ Evite</div>
+                  <div style="aspect-ratio: 4/3; background: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 8px, #141414 8px, #141414 16px); border-radius:8px; padding:10px; position:relative;">
+                    <span style="width:24px; height:24px; background:#dc2626; border-radius:999px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;">✕</span>
+                    <span style="position:absolute; bottom:10px; left:10px; font-family:monospace; font-size:11px; color:#6a6a6a;">[ foto de exemplo ruim ]</span>
+                  </div>
+                  <div style="font-size:13px; color:#9a9a9a; margin-top:8px;">Pouca luz, imagem tremida, uma mão só no enquadramento.</div>
+                </div>
+              </div>
+            </div>
+            </sc-if>
+
+            <sc-if value="{{ noDetail }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 40px 20px; background:#0b0b0b; border:1px dashed #2a2a2a; border-radius:12px; text-align:center; color:#6a6a6a; font-size:13px;">
+                Aguardando os prints de detalhes desta tarefa para preencher aqui.
+              </div>
+            </sc-if>
+
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div style="background:#0b1e35; border:1px solid #1e3a5f; border-radius:12px; padding:18px; display:flex; gap:14px;">
+              <span style="color:#60a5fa; font-size:20px;">🕐</span>
+              <div>
+                <div style="font-weight:600; font-size:15px; margin-bottom:4px;">Grave entre {{ activeTask.min }} min e 120 min.</div>
+                <div style="font-size:13px; color:#a5b8cf; line-height:1.5;">Certifique-se de atingir a duração mínima da tarefa. Mantenha o arquivo abaixo de 75 GB.</div>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+              <button style="background:#fff; color:#000; border:none; padding:14px; border-radius:10px; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">📷 Gravar</button>
+              <button style="background:#1a1a1a; color:#e6e6e6; border:1px solid #2a2a2a; padding:14px; border-radius:10px; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">⬆ Enviar</button>
+            </div>
+
+            <div style="background:#2a0a0a; border:1px solid #5f1e1e; border-radius:12px; padding:18px; display:flex; gap:12px;">
+              <span style="color:#f87171; font-size:18px;">⚠</span>
+              <div style="font-size:13px; line-height:1.6; color:#f5c5c5;">A gravação está desativada em computadores. A webcam de um notebook ou desktop fica fixa à sua frente, então não consegue captar a visão em primeira pessoa pela qual estas tarefas são avaliadas. Grave pelo celular ou use a aba <strong>Enviar</strong> para mandar um arquivo gravado em outro dispositivo.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { activeIndex: null, tab: 'how' };
+
+  renderVals() {
+    const commonBefore = [
+      'Fixe o celular na cabeça para a câmera ver o que você vê. As duas mãos e a área de trabalho ficam no enquadramento.',
+      'Limpe a lente. Verifique se o ambiente está bem iluminado.',
+      'Vire o celular na horizontal (paisagem) e grave em 1080p, 30fps ou melhor.',
+    ];
+    const commonAfter = [
+      'Envie o arquivo original. Sem edições, sem filtros, sem cortes.',
+      'Cada vídeo é revisado duas vezes antes de ser aceito. Material vindo de qualquer câmera que não seja a sua é rejeitado.',
+    ];
+
+    const agriculture = {
+      tituloLong: 'Agricultura e trabalho ao ar livre em uma empresa',
+      descLong: 'Grave plantações, terrenos e materiais sendo trabalhados ao ar livre: plantio, colheita, separação e qualquer atividade semelhante. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 8,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Grave só com a autorização do local, e só onde a sinalização ou o consentimento das pessoas presentes cobrir.',
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'NÃO narre. Grave o trabalho apenas com o som ambiente natural.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como agricultura e trabalho ao ar livre',
+      counts: ['Plantio', 'Colheita', 'Separação e triagem', 'Manutenção de terrenos', 'Reciclagem de materiais'],
+      where: 'Fazenda, centro de jardinagem, centro de reciclagem, terrenos ao ar livre e espaços públicos',
+      notAccepted: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interações com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é comercial?',
+      clipBody: [
+        { paragraph: 'Um vídeo é comercial só quando as três condições são verdadeiras:' },
+        { ol: [
+          'O trabalho acontece em uma empresa ou local público, fora da sua própria casa.',
+          'O local aparece no enquadramento e você tem autorização para gravar ali.',
+          'Você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.',
+        ]},
+        { paragraph: 'Qualquer outra coisa é residencial e paga pela tarifa residencial:' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Detalhamento é comercial só dentro de uma cabine de detalhamento ou oficina.',
+          'Limpeza é comercial só em espaço empresarial. Qualquer casa, inclusive de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise. Um vídeo enviado como comercial que na revisão for classificado como residencial ainda é aceito e pago pela tarifa residencial.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Sem narração — apenas som ambiente' },
+        { text: 'Autorização do local evidente; sem ambientes bloqueados (consulte a lista de exclusões)' },
+      ],
+      allowed: ['Plantio', 'Colheita', 'Separação e triagem', 'Manutenção de terrenos', 'Reciclagem de materiais'],
+      avoid: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interação com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, fabricação de letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const assembly = {
+      tituloLong: 'Montagem e instalação na sua própria casa',
+      descLong: 'Grave móveis e acessórios sendo montados e instalados: móveis para montar, prateleiras, fixação de TV e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como montagem e instalação',
+      counts: ['Móveis para montar (flat-pack)', 'Prateleiras', 'Fixação de TV', 'Instalação de cortinas', 'Dispositivos de casa inteligente'],
+      where: 'Áreas de convivência, quarto, home office',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Móveis para montar (flat-pack)', 'Prateleiras', 'Fixação de TV', 'Instalação de cortinas', 'Dispositivos de casa inteligente'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const tasks = [
+      { titulo: 'Grave vídeos de tarefas domésticas — Brasil', descricao: 'Filme-se realizando tarefas domésticas reais em primeira pessoa e ganhe 7 dólares por cada hora de vídeo aprovada.', valor: '7', min: 3, sent: 26 },
+      { titulo: 'Agricultura e trabalho ao ar livre em uma empresa', descricao: 'Grave plantações, terrenos e materiais sendo trabalhados ao ar livre: plantio, colheita, separação e qualquer atividade semelhante.', valor: '8', min: 5, sent: null },
+      { titulo: 'Montagem e instalação na sua própria casa', descricao: 'Grave móveis e acessórios sendo montados e instalados: móveis para montar, prateleiras, fixação de TV e itens semelhantes.', valor: '5', min: 5, sent: null },
+      { titulo: 'Limpeza e organização na sua própria casa', descricao: 'Grave ambientes sendo desorganizados, arrumados e limpos (fora cozinha e lavanderia): descarte de itens, organização de armários e garagem.', valor: '5', min: 5, sent: null },
+      { titulo: 'Construção e obras em uma empresa', descricao: 'Grave trabalhos de obra, elétrica, hidráulica e acabamento em canteiro: pintura de imóveis, reforma, instalação elétrica e afins.', valor: '8', min: 5, sent: null },
+      { titulo: 'Eletrônicos e configuração de tecnologia na sua casa', descricao: 'Grave computadores, redes e equipamentos audiovisuais sendo montados, configurados e ajustados: montagem de PC, roteador e rede.', valor: '5', min: 5, sent: null },
+      { titulo: 'Fabricação e montagem em uma empresa', descricao: 'Grave materiais sendo cortados, unidos, acabados e montados: corte, junção, lixamento e atividades semelhantes.', valor: '8', min: 5, sent: null },
+      { titulo: 'Produção de alimentos em uma empresa', descricao: 'Grave alimentos sendo preparados, assados, empratados e embalados em uma linha de produção: preparo de massa, assar, empratar.', valor: '8', min: 5, sent: null },
+      { titulo: 'Logística e estocagem em uma empresa', descricao: 'Grave estoque sendo recebido, separado, embalado e expedido: recebimento, separação, embalagem e afins.', valor: '8', min: 5, sent: null },
+      { titulo: 'Manutenção externa na sua própria casa', descricao: 'Grave a área externa da sua casa sendo limpa, consertada e impermeabilizada: limpeza de calhas, lavagem com jato de pressão.', valor: '5', min: 5, sent: null },
+      { titulo: 'Pintura e acabamento de superfícies em casa', descricao: 'Grave paredes e madeiramento sendo preparados, pintados e acabados: pintura de parede interna, lixamento, envernizamento.', valor: '5', min: 5, sent: null },
+      { titulo: 'Cuidados com pets na sua própria casa', descricao: 'Grave animais de estimação sendo tosados e lavados, e o ambiente deles sendo limpo: tosa, banho, limpeza de caixa e afins.', valor: '5', min: 5, sent: null },
+      { titulo: 'Reparo e manutenção em uma empresa', descricao: 'Grave veículos e equipamentos sendo diagnosticados, revisados e reparados: diagnóstico de motor, troca de freios e pneus.', valor: '8', min: 5, sent: null },
+      { titulo: 'Reparos e consertos na sua própria casa', descricao: 'Grave móveis, paredes, portas e acessórios sendo consertados em casa: reparo de móveis, tapar buracos na parede, ajuste de porta.', valor: '5', min: 5, sent: null },
+      { titulo: 'Trabalho têxtil e de vestuário na sua casa', descricao: 'Grave roupas e sapatos sendo consertados e cuidados manualmente: costura, barra, troca de botão e afins.', valor: '5', min: 5, sent: null },
+      { titulo: 'Cuidados com veículos e bicicletas em casa', descricao: 'Grave seu próprio carro, moto ou bicicleta sendo lavado e revisado em casa: lavagem, verificação de óleo e fluidos, calibragem.', valor: '5', min: 5, sent: null },
+      { titulo: 'Limpeza e detalhamento de veículos em empresa', descricao: 'Grave veículos e espaços comerciais sendo limpos e detalhados: detalhamento interno, detalhamento externo e afins.', valor: '8', min: 5, sent: null },
+      { titulo: 'Trabalho no quintal e jardim em casa', descricao: 'Grave o seu quintal ou jardim sendo plantado, podado, cortado e regado: plantio, capina, poda e afins.', valor: '5', min: 5, sent: null },
+    ];
+
+    const withHandlers = tasks.map((t, i) => ({
+      ...t,
+      open: () => this.setState({ activeIndex: i, tab: 'how' })
+    }));
+
+    const cleaning = {
+      tituloLong: 'Limpeza e organização na sua própria casa',
+      descLong: 'Grave ambientes sendo desorganizados, organizados e limpos (sem cozinha, sem lavanderia): descarte de itens, organização de armários e garagem, limpeza de janelas e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como limpeza e organização',
+      counts: ['Descarte de itens', 'Organização de armário e garagem', 'Limpeza de janelas', 'Limpeza de banheiro', 'Cuidados com pisos'],
+      where: 'Toda a casa, exceto a cozinha e a lavanderia',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Descarte de itens', 'Organização de armário e garagem', 'Limpeza de janelas', 'Limpeza de banheiro', 'Cuidados com pisos'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const construction = {
+      tituloLong: 'Construção e obras em uma empresa',
+      descLong: 'Grave trabalhos de obra, elétrica, hidráulica e acabamento em canteiro: pintura de imóveis, reforma, instalação elétrica e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 8,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Grave só com a autorização do local, e só onde a sinalização ou o consentimento das pessoas presentes cobrir.',
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'NÃO narre. Grave o trabalho apenas com o som ambiente natural.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como construção e obras',
+      counts: ['Pintura de imóveis', 'Reforma', 'Instalação elétrica', 'Encanamento', 'Estrutura (framing)', 'Acabamento de superfícies'],
+      where: 'Canteiros de obra, reformas, chamados de eletricista e encanador, trabalhos de pintura',
+      notAccepted: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interações com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é comercial?',
+      clipBody: [
+        { paragraph: 'Um vídeo é comercial só quando as três condições são verdadeiras:' },
+        { ol: [
+          'O trabalho acontece em uma empresa ou local público, fora da sua própria casa.',
+          'O local aparece no enquadramento e você tem autorização para gravar ali.',
+          'Você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.',
+        ]},
+        { paragraph: 'Qualquer outra coisa é residencial e paga pela tarifa residencial:' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Detalhamento é comercial só dentro de uma cabine de detalhamento ou oficina.',
+          'Limpeza é comercial só em espaço empresarial. Qualquer casa, inclusive de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise. Um vídeo enviado como comercial que na revisão for classificado como residencial ainda é aceito e pago pela tarifa residencial.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Sem narração — apenas som ambiente' },
+        { text: 'Autorização do local evidente; sem ambientes bloqueados (consulte a lista de exclusões)' },
+      ],
+      allowed: ['Pintura de imóveis', 'Reforma', 'Instalação elétrica', 'Encanamento', 'Estrutura (framing)', 'Acabamento de superfícies'],
+      avoid: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interação com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, fabricação de letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const electronics = {
+      tituloLong: 'Eletrônicos e configuração de tecnologia na sua própria casa',
+      descLong: 'Grave computadores, redes e equipamentos audiovisuais sendo montados, configurados e consertados: montagem de PC, configuração de roteador e rede, instalação de AV e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como eletrônicos e configuração de tecnologia',
+      counts: ['Montagem de PC', 'Configuração de roteador e rede', 'Instalação de AV', 'Diagnóstico e conserto de aparelhos'],
+      where: 'Home office, sala de estar',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Montagem de PC', 'Configuração de roteador e rede', 'Instalação de AV', 'Diagnóstico e conserto de aparelhos'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const fabrication = {
+      tituloLong: 'Fabricação e montagem em uma empresa',
+      descLong: 'Grave materiais sendo cortados, unidos, acabados e montados: corte, junção, lixamento e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 8,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Grave só com a autorização do local, e só onde a sinalização ou o consentimento das pessoas presentes cobrir.',
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'NÃO narre. Grave o trabalho apenas com o som ambiente natural.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como fabricação e montagem',
+      counts: ['Corte', 'Junção', 'Lixamento', 'Estofamento', 'Montagem de chicote elétrico'],
+      where: 'Marcenaria, fabricação metálica, reestofamento de móveis, fábrica de fios e cabos',
+      notAccepted: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interações com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é comercial?',
+      clipBody: [
+        { paragraph: 'Um vídeo é comercial só quando as três condições são verdadeiras:' },
+        { ol: [
+          'O trabalho acontece em uma empresa ou local público, fora da sua própria casa.',
+          'O local aparece no enquadramento e você tem autorização para gravar ali.',
+          'Você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.',
+        ]},
+        { paragraph: 'Qualquer outra coisa é residencial e paga pela tarifa residencial:' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Detalhamento é comercial só dentro de uma cabine de detalhamento ou oficina.',
+          'Limpeza é comercial só em espaço empresarial. Qualquer casa, inclusive de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise. Um vídeo enviado como comercial que na revisão for classificado como residencial ainda é aceito e pago pela tarifa residencial.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Sem narração — apenas som ambiente' },
+        { text: 'Autorização do local evidente; sem ambientes bloqueados (consulte a lista de exclusões)' },
+      ],
+      allowed: ['Corte', 'Junção', 'Lixamento', 'Estofamento', 'Montagem de chicote elétrico'],
+      avoid: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interação com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, fabricação de letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const food = {
+      tituloLong: 'Produção de alimentos em uma empresa',
+      descLong: 'Grave alimentos sendo preparados, assados, empratados e embalados em uma linha de produção: preparo de massa, forneamento, empratamento e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 8,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Grave só com a autorização do local, e só onde a sinalização ou o consentimento das pessoas presentes cobrir.',
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'NÃO narre. Grave o trabalho apenas com o som ambiente natural.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como produção de alimentos',
+      counts: ['Preparo de massa', 'Forneamento', 'Empratamento', 'Embalagem', 'Processamento em lote'],
+      where: 'Padaria, confeitaria, pizzaria, cozinha comercial, fábrica de processamento de alimentos',
+      notAccepted: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interações com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é comercial?',
+      clipBody: [
+        { paragraph: 'Um vídeo é comercial só quando as três condições são verdadeiras:' },
+        { ol: [
+          'O trabalho acontece em uma empresa ou local público, fora da sua própria casa.',
+          'O local aparece no enquadramento e você tem autorização para gravar ali.',
+          'Você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.',
+        ]},
+        { paragraph: 'Qualquer outra coisa é residencial e paga pela tarifa residencial:' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Detalhamento é comercial só dentro de uma cabine de detalhamento ou oficina.',
+          'Limpeza é comercial só em espaço empresarial. Qualquer casa, inclusive de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise. Um vídeo enviado como comercial que na revisão for classificado como residencial ainda é aceito e pago pela tarifa residencial.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Sem narração — apenas som ambiente' },
+        { text: 'Autorização do local evidente; sem ambientes bloqueados (consulte a lista de exclusões)' },
+      ],
+      allowed: ['Preparo de massa', 'Forneamento', 'Empratamento', 'Embalagem', 'Processamento em lote'],
+      avoid: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interação com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, fabricação de letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const logistics = {
+      tituloLong: 'Logística e estocagem em uma empresa',
+      descLong: 'Grave estoque sendo recebido, separado, embalado e disposto: recebimento, separação, embalagem e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 8,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Grave só com a autorização do local, e só onde a sinalização ou o consentimento das pessoas presentes cobrir.',
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'NÃO narre. Grave o trabalho apenas com o som ambiente natural.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como logística e estocagem',
+      counts: ['Recebimento', 'Separação (picking)', 'Embalagem', 'Reposição de prateleiras', 'Contagem de estoque'],
+      where: 'Depósito, almoxarifado, área interna de loja, estocagem de mercearia e hortifrúti, distribuição',
+      notAccepted: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interações com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é comercial?',
+      clipBody: [
+        { paragraph: 'Um vídeo é comercial só quando as três condições são verdadeiras:' },
+        { ol: [
+          'O trabalho acontece em uma empresa ou local público, fora da sua própria casa.',
+          'O local aparece no enquadramento e você tem autorização para gravar ali.',
+          'Você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.',
+        ]},
+        { paragraph: 'Qualquer outra coisa é residencial e paga pela tarifa residencial:' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Detalhamento é comercial só dentro de uma cabine de detalhamento ou oficina.',
+          'Limpeza é comercial só em espaço empresarial. Qualquer casa, inclusive de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise. Um vídeo enviado como comercial que na revisão for classificado como residencial ainda é aceito e pago pela tarifa residencial.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Sem narração — apenas som ambiente' },
+        { text: 'Autorização do local evidente; sem ambientes bloqueados (consulte a lista de exclusões)' },
+      ],
+      allowed: ['Recebimento', 'Separação (picking)', 'Embalagem', 'Reposição de prateleiras', 'Contagem de estoque'],
+      avoid: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interação com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, fabricação de letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const outdoorMaint = {
+      tituloLong: 'Manutenção externa na sua própria casa',
+      descLong: 'Grave a área externa da sua casa sendo limpa, consertada e impermeabilizada: limpeza de calhas, lavagem com jato de pressão, reparo de cerca e deck e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como manutenção externa',
+      counts: ['Limpeza de calhas', 'Lavagem com jato de pressão', 'Reparo de cerca e deck', 'Impermeabilização'],
+      where: 'Área externa, telhado, quintal',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Limpeza de calhas', 'Lavagem com jato de pressão', 'Reparo de cerca e deck', 'Impermeabilização'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const painting = {
+      tituloLong: 'Pintura e acabamento de superfícies na sua própria casa',
+      descLong: 'Grave paredes e madeiramento sendo preparados, pintados e acabados: pintura de parede interna, lixamento, aplicação de verniz e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como pintura e acabamento de superfícies',
+      counts: ['Pintura de parede interna', 'Lixamento', 'Aplicação de tingidor (staining)', 'Aplicação de verniz', 'Reparo de drywall'],
+      where: 'Ambientes internos, acabamento externo',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Pintura de parede interna', 'Lixamento', 'Aplicação de tingidor (staining)', 'Aplicação de verniz', 'Reparo de drywall'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const petCare = {
+      tituloLong: 'Cuidados com pets na sua própria casa',
+      descLong: 'Grave animais de estimação sendo tosados e lavados, e o ambiente deles sendo limpo: tosa, banho, limpeza de gaiola e aquário e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como cuidados com pets',
+      counts: ['Tosa', 'Banho', 'Limpeza de gaiola e aquário', 'Preparo de coleira e acessórios'],
+      where: 'Casa, quintal',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Tosa', 'Banho', 'Limpeza de gaiola e aquário', 'Preparo de coleira e acessórios'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const repairBiz = {
+      tituloLong: 'Reparo e manutenção em uma empresa',
+      descLong: 'Grave veículos e equipamentos sendo diagnosticados, revisados e reparados: diagnóstico de motor, serviço de freios e pneus, trabalho de corrente e transmissão e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 8,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Grave só com a autorização do local, e só onde a sinalização ou o consentimento das pessoas presentes cobrir.',
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'NÃO narre. Grave o trabalho apenas com o som ambiente natural.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como reparo e manutenção',
+      counts: ['Diagnóstico de motor', 'Serviço de freios e pneus', 'Trabalho de corrente e transmissão', 'Reparo de bancada de ferramentas e equipamentos'],
+      where: 'Oficina de automóveis, oficina de motos, oficina de bicicletas, oficina eletromecânica, conserto de instrumentos',
+      notAccepted: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interações com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é comercial?',
+      clipBody: [
+        { paragraph: 'Um vídeo é comercial só quando as três condições são verdadeiras:' },
+        { ol: [
+          'O trabalho acontece em uma empresa ou local público, fora da sua própria casa.',
+          'O local aparece no enquadramento e você tem autorização para gravar ali.',
+          'Você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.',
+        ]},
+        { paragraph: 'Qualquer outra coisa é residencial e paga pela tarifa residencial:' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Detalhamento é comercial só dentro de uma cabine de detalhamento ou oficina.',
+          'Limpeza é comercial só em espaço empresarial. Qualquer casa, inclusive de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise. Um vídeo enviado como comercial que na revisão for classificado como residencial ainda é aceito e pago pela tarifa residencial.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Sem narração — apenas som ambiente' },
+        { text: 'Autorização do local evidente; sem ambientes bloqueados (consulte a lista de exclusões)' },
+      ],
+      allowed: ['Diagnóstico de motor', 'Serviço de freios e pneus', 'Trabalho de corrente e transmissão', 'Reparo de bancada de ferramentas e equipamentos'],
+      avoid: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interação com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, fabricação de letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const repairsFixes = {
+      tituloLong: 'Reparos e consertos na sua própria casa',
+      descLong: 'Grave móveis, paredes, portas e acessórios da sua casa sendo consertados: reparo de móveis, remendo de parede, trabalho em portas e fechaduras e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como reparos e consertos',
+      counts: ['Reparo de móveis', 'Remendo de parede', 'Trabalho em portas e fechaduras', 'Vedação (caulking)', 'Troca de acessórios e ferragens'],
+      where: 'Áreas de convivência, banheiro, garagem',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Reparo de móveis', 'Remendo de parede', 'Trabalho em portas e fechaduras', 'Vedação (caulking)', 'Troca de acessórios e ferragens'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const textile = {
+      tituloLong: 'Trabalho têxtil e de vestuário na sua própria casa',
+      descLong: 'Grave roupas e sapatos sendo consertados e cuidados manualmente: costura, barra, troca de botão e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como trabalho têxtil e de vestuário',
+      counts: ['Costura', 'Barra', 'Troca de botão', 'Troca de zíper', 'Cuidados com calçados'],
+      where: 'Áreas de convivência, cantinho de costura',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Costura', 'Barra', 'Troca de botão', 'Troca de zíper', 'Cuidados com calçados'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const vehicleCare = {
+      tituloLong: 'Cuidados com veículos e bicicletas na sua própria casa',
+      descLong: 'Grave seu próprio carro, moto ou bicicleta sendo lavado e revisado em casa: lavagem, verificação de óleo e fluidos, troca de pneus e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como cuidados com veículos e bicicletas',
+      counts: ['Lavagem', 'Verificação de óleo e fluidos', 'Troca de pneus', 'Manutenção de corrente e freios'],
+      where: 'Garagem, entrada de carro',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Lavagem', 'Verificação de óleo e fluidos', 'Troca de pneus', 'Manutenção de corrente e freios'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const vehicleDetail = {
+      tituloLong: 'Limpeza e detalhamento de veículos em uma empresa',
+      descLong: 'Grave veículos e espaços comerciais sendo limpos e detalhados: detalhamento interno, detalhamento externo e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 8,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Grave só com a autorização do local, e só onde a sinalização ou o consentimento das pessoas presentes cobrir.',
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'NÃO narre. Grave o trabalho apenas com o som ambiente natural.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como limpeza e detalhamento de veículos',
+      counts: ['Detalhamento interno de veículo', 'Detalhamento externo de veículo', 'Limpeza de espaço comercial', 'Limpeza de equipamentos'],
+      where: 'Cabines de detalhamento de carro e moto, escritórios, academias, lobbies de hotel',
+      notAccepted: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interações com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é comercial?',
+      clipBody: [
+        { paragraph: 'Um vídeo é comercial só quando as três condições são verdadeiras:' },
+        { ol: [
+          'O trabalho acontece em uma empresa ou local público, fora da sua própria casa.',
+          'O local aparece no enquadramento e você tem autorização para gravar ali.',
+          'Você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.',
+        ]},
+        { paragraph: 'Qualquer outra coisa é residencial e paga pela tarifa residencial:' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Detalhamento é comercial só dentro de uma cabine de detalhamento ou oficina.',
+          'Limpeza é comercial só em espaço empresarial. Qualquer casa, inclusive de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise. Um vídeo enviado como comercial que na revisão for classificado como residencial ainda é aceito e pago pela tarifa residencial.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Sem narração — apenas som ambiente' },
+        { text: 'Autorização do local evidente; sem ambientes bloqueados (consulte a lista de exclusões)' },
+      ],
+      allowed: ['Detalhamento interno de veículo', 'Detalhamento externo de veículo', 'Limpeza de espaço comercial', 'Limpeza de equipamentos'],
+      avoid: [
+        'Postos de gasolina, varejo e produção de roupas e moda, fábricas de eletrônicos ou reparo, conserto de eletrodomésticos',
+        'Bares, cafeterias, bibliotecas, varejo de perfumaria e beleza',
+        'Barbearias, salões de manicure, conserto de celular (interação com objetos muito pequenos)',
+        'Açougue, peixaria, abate de aves, academia de boxe (imagens violentas ou com sangue)',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, floricultura, fabricação de letreiros, tornearia',
+        'Lava-jatos',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, terminais de pagamento, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const yardGarden = {
+      tituloLong: 'Trabalho no quintal e jardim na sua própria casa',
+      descLong: 'Grave o seu quintal ou jardim sendo plantado, podado, cortado e regado: plantio, capina, poda e itens semelhantes. Celular fixado à cabeça, 1080p em modo paisagem, as duas mãos no enquadramento, uma tomada contínua. US$ 5,00 por hora de vídeo aceito.',
+      before: [
+        ...commonBefore,
+        'Mantenha pessoas ao redor, documentos pessoais, telas, endereços e placas fora do enquadramento. Não filme menores de idade.',
+      ],
+      while_: [
+        'Grave uma tarefa inteira do começo ao fim, no seu ritmo natural. Sem encenação, sem refazer.',
+        'Narre enquanto trabalha. Diga o que você está fazendo e por quê, com suas próprias palavras, no seu idioma.',
+        'Uma tomada contínua, de 5 minutos a 2 horas. Sem cortes, sem pausar e retomar.',
+        'Continue trabalhando. Mais de 90% do vídeo deve ser trabalho ativo, não parado.',
+        'Passe pelas etapas da tarefa naturalmente, incluindo trocar entre subtarefas. Repetir uma única ação por minutos seguidos é rejeitado.',
+      ],
+      after: commonAfter,
+      whatTitle: 'O que vale como trabalho no quintal e jardim',
+      counts: ['Plantio', 'Capina', 'Poda', 'Cortar grama', 'Compostagem', 'Instalação de irrigação'],
+      where: 'Quintal, jardim, varanda',
+      notAccepted: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+      clipTitle: 'Meu vídeo é residencial?',
+      clipBody: [
+        { paragraph: 'Residencial é o padrão. Um vídeo é comercial só quando as três condições são verdadeiras: o trabalho acontece em uma empresa ou local público fora da sua própria casa, o local aparece no enquadramento e você tem autorização para gravar ali, e você está trabalhando nos equipamentos, no estoque ou nas instalações da empresa.' },
+        { ul: [
+          'Consertar ou lavar o próprio veículo em casa é sempre residencial.',
+          'Limpar qualquer casa, inclusive a de outra pessoa, é residencial.',
+        ]},
+        { paragraph: 'Um revisor decide a categoria na primeira análise, e o pagamento segue a categoria revisada.' },
+      ],
+      buscamos: [
+        { text: 'Vista em primeira pessoa, celular na cabeça — uma única câmera, não tripé nem imagem parada' },
+        { text: 'As duas mãos visíveis em pelo menos 90% do tempo de trabalho ativo' },
+        { text: 'Mais de 90% do vídeo é trabalho ativo' },
+        { text: 'Uma tomada contínua, de 5 minutos a 2 horas, sem cortes' },
+        { text: 'Progressão natural da tarefa e troca entre subtarefas — nenhuma ação repetida por longos períodos' },
+        { text: '1080p ou melhor, 30fps ou melhor, paisagem, iluminação adequada, lente limpa' },
+        { text: 'Nenhuma pessoa identificável ao redor, documentos, telas, endereços ou placas; sem menores de idade', sub: 'Dados pessoais na tela — rejeitar direto ou marcar os trechos para remoção.' },
+        { text: 'Somente material gravado pelo próprio colaborador — nada baixado, duplicado ou vindo de fontes externas' },
+        { text: 'Com narração do começo ao fim — o colaborador descreve o trabalho enquanto o faz' },
+        { text: 'Sem trabalho de cozinha e sem trabalho de lavanderia' },
+      ],
+      allowed: ['Plantio', 'Capina', 'Poda', 'Cortar grama', 'Compostagem', 'Instalação de irrigação'],
+      avoid: [
+        'Qualquer trabalho de cozinha: cozinhar, preparar comida, louça, limpeza da cozinha',
+        'Qualquer trabalho de lavanderia: lavar, estender, dobrar, passar',
+        'Trabalho decorativo e artesanal: mosaicos, artesanato, joalheria, fabricação de letreiros, tornearia',
+        'Trabalho encenado ou refeito, longos períodos parado, repetição de uma única ação',
+        'Dirigir, ou usar celular ou tela como a tarefa em si',
+        'Menores de idade na câmera; pessoas ao redor, documentos pessoais, telas, endereços ou placas no enquadramento',
+      ],
+    };
+
+    const details = {
+      1: agriculture,
+      2: assembly,
+      3: cleaning,
+      4: construction,
+      5: electronics,
+      6: fabrication,
+      7: food,
+      8: logistics,
+      9: outdoorMaint,
+      10: painting,
+      11: petCare,
+      12: repairBiz,
+      13: repairsFixes,
+      14: textile,
+      15: vehicleCare,
+      16: vehicleDetail,
+      17: yardGarden,
+    };
+    const activeBase = this.state.activeIndex !== null ? tasks[this.state.activeIndex] : {};
+    const activeDetail = details[this.state.activeIndex] || null;
+    const activeTask = activeDetail
+      ? { ...activeBase, ...activeDetail, tituloLong: activeDetail.tituloLong || activeBase.titulo, descLong: activeDetail.descLong || activeBase.descricao, valor: activeBase.valor, hasDetail: true }
+      : { ...activeBase, tituloLong: activeBase.titulo, descLong: activeBase.descricao, hasDetail: false, counts: [], notAccepted: [], allowed: [], avoid: [], where: '', whatTitle: '' };
+    const showHow = this.state.tab === 'how';
+    const showWhat = this.state.tab === 'what';
+
+    const nav = [
+      { icon: '▦', label: 'Painel',      color: '#8a8a8a', bg: 'transparent' },
+      { icon: '▤', label: 'Tarefas',     color: '#ffffff', bg: '#161616' },
+      { icon: '▶', label: 'Envios',      color: '#8a8a8a', bg: 'transparent' },
+      { icon: '◎', label: 'Ganhos',      color: '#8a8a8a', bg: 'transparent' },
+      { icon: '👤', label: 'Perfil de dados', color: '#8a8a8a', bg: 'transparent' },
+      { icon: '👥', label: 'Indicações', color: '#8a8a8a', bg: 'transparent' },
+    ];
+
+    return {
+      tasks: withHandlers,
+      nav,
+      modalOpen: this.state.activeIndex !== null,
+      noDetail: this.state.activeIndex !== null && !activeDetail,
+      activeTask,
+      showHow, showWhat,
+      tabHowBg: showHow ? '#262626' : 'transparent',
+      tabHowColor: showHow ? '#ffffff' : '#8a8a8a',
+      tabWhatBg: showWhat ? '#262626' : 'transparent',
+      tabWhatColor: showWhat ? '#ffffff' : '#8a8a8a',
+      setTabHow: () => this.setState({ tab: 'how' }),
+      setTabWhat: () => this.setState({ tab: 'what' }),
+      closeModal: () => this.setState({ activeIndex: null }),
+      stopProp: (e) => e.stopPropagation(),
+    };
+  }
+}
+</script>
+</body>
+</html>
