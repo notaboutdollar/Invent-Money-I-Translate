@@ -630,7 +630,6 @@ class Component extends DCLogic {
     };
 
     const tasks = [
-      { titulo: 'Grave vídeos de tarefas domésticas — Brasil', descricao: 'Filme-se realizando tarefas domésticas reais em primeira pessoa e ganhe 7 dólares por cada hora de vídeo aprovada.', valor: '7', min: 3, sent: 26 },
       { titulo: 'Agricultura e trabalho ao ar livre em uma empresa', descricao: 'Grave plantações, terrenos e materiais sendo trabalhados ao ar livre: plantio, colheita, separação e qualquer atividade semelhante.', valor: '8', min: 5, sent: null },
       { titulo: 'Montagem e instalação na sua própria casa', descricao: 'Grave móveis e acessórios sendo montados e instalados: móveis para montar, prateleiras, fixação de TV e itens semelhantes.', valor: '5', min: 5, sent: null },
       { titulo: 'Limpeza e organização na sua própria casa', descricao: 'Grave ambientes sendo desorganizados, arrumados e limpos (fora cozinha e lavanderia): descarte de itens, organização de armários e garagem.', valor: '5', min: 5, sent: null },
@@ -1608,23 +1607,23 @@ class Component extends DCLogic {
     };
 
     const details = {
-      1: agriculture,
-      2: assembly,
-      3: cleaning,
-      4: construction,
-      5: electronics,
-      6: fabrication,
-      7: food,
-      8: logistics,
-      9: outdoorMaint,
-      10: painting,
-      11: petCare,
-      12: repairBiz,
-      13: repairsFixes,
-      14: textile,
-      15: vehicleCare,
-      16: vehicleDetail,
-      17: yardGarden,
+      0: agriculture,
+      1: assembly,
+      2: cleaning,
+      3: construction,
+      4: electronics,
+      5: fabrication,
+      6: food,
+      7: logistics,
+      8: outdoorMaint,
+      9: painting,
+      10: petCare,
+      11: repairBiz,
+      12: repairsFixes,
+      13: textile,
+      14: vehicleCare,
+      15: vehicleDetail,
+      16: yardGarden,
     };
     const activeBase = this.state.activeIndex !== null ? tasks[this.state.activeIndex] : {};
     const activeDetail = details[this.state.activeIndex] || null;
