@@ -108,38 +108,16 @@
 
   /* ---- ponte para treinadores-de-ia (paleta do site oficial) ---- */
   .topbar{ background:#F4EFE7; border-bottom:1px solid #E4DDD0; }
-  .topbar-in{ max-width:1320px; margin:0 auto; padding:11px 32px; display:flex; align-items:center;
-              justify-content:center; gap:10px; flex-wrap:wrap; font-size:13.5px; color:#4a463f; }
+  .topbar-in{ max-width:1320px; margin:0 auto; padding:12px 32px; display:flex; align-items:center;
+              justify-content:center; gap:14px; flex-wrap:wrap; font-size:13.5px; color:#4a463f; }
   .topbar b{ color:#0F0F0F; font-weight:700; }
-  .topbar a{ color:#D9591F; font-weight:700; text-decoration:none; white-space:nowrap; }
-  .topbar a:hover{ text-decoration:underline; }
+  .topbar-cta{ display:inline-flex; align-items:center; gap:6px; padding:5px 13px;
+               background:#0F0F0F; color:#fff; border-radius:999px; font-weight:600;
+               text-decoration:none; font-size:13px; white-space:nowrap;
+               transition:background .15s; }
+  .topbar-cta:hover{ background:#332f2a; }
+  .topbar-cta svg{ width:12px; height:12px; }
 
-  .cross{ background:#F4EFE7; border:1px solid #E4DDD0; border-radius:var(--r-card);
-          padding:40px; margin-top:34px; color:#0F0F0F; }
-  .cross-eyebrow{ font-size:11.5px; font-weight:700; letter-spacing:.14em; color:#D9591F; margin-bottom:14px; }
-  .cross h2{ margin:0 0 18px; font-size:32px; font-weight:800; letter-spacing:-0.03em;
-             line-height:1.15; max-width:20ch; }
-  .cross p{ margin:0 0 14px; font-size:15px; line-height:1.65; color:#4a463f; max-width:66ch; }
-  .cross p b{ color:#0F0F0F; font-weight:700; }
-  .cross-stats{ display:flex; gap:10px; flex-wrap:wrap; margin:24px 0 26px; }
-  .cross-stat{ background:#fff; border:1px solid #E4DDD0; border-radius:var(--r-pill);
-               padding:8px 15px; font-size:13px; font-weight:600; color:#4a463f; }
-  .cross-cta{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
-  .cross-btn{ display:inline-flex; align-items:center; gap:9px; padding:15px 24px;
-              border-radius:var(--r-pill); font-size:14.5px; font-weight:700; text-decoration:none; }
-  .cross-dark{ background:#0F0F0F; color:#fff; }
-  .cross-dark:hover{ background:#332f2a; }
-  .cross-wa{ background:#25D366; color:#0F0F0F; }
-  .cross-wa:hover{ background:#1fbb59; }
-  .cross-link{ font-size:14px; font-weight:600; color:#D9591F; text-decoration:none; }
-  .cross-link:hover{ text-decoration:underline; }
-
-  .mcross{ background:#F4EFE7; border:1px solid #E4DDD0; border-radius:var(--r-md); padding:18px; }
-  .mcross-eyebrow{ font-size:10.5px; font-weight:700; letter-spacing:.12em; color:#D9591F; margin-bottom:9px; }
-  .mcross p{ margin:0 0 14px; font-size:13.5px; line-height:1.55; color:#4a463f; }
-  .mcross a{ display:inline-flex; align-items:center; gap:7px; font-size:13.5px;
-             font-weight:700; color:#0F0F0F; text-decoration:none; }
-  .mcross a:hover{ text-decoration:underline; }
   .count b{ color:var(--text); font-weight:700; }
 
   /* ---- cards ---- */
@@ -239,12 +217,7 @@
     .ov{ padding:0; }
     .modal{ max-height:100vh; border-radius:0; }
     .mbody{ padding:24px 20px 32px; }
-    .topbar-in{ padding:11px 18px; text-align:center; gap:6px; font-size:13px; }
-    .cross{ padding:26px 22px; }
-    .cross h2{ font-size:25px; }
-    .cross-btn{ width:100%; justify-content:center; }
-    .cross-cta{ gap:10px; }
-    .cross-link{ width:100%; text-align:center; }
+    .topbar-in{ padding:11px 18px; text-align:center; gap:10px; font-size:13px; }
   }
 </style>
 </helmet>
@@ -253,8 +226,11 @@
 
   <div class="topbar">
     <div class="topbar-in">
-      <span>Estas são as tarefas de <b>uma das quatro</b> plataformas que pagam em dólar por gravação.</span>
-      <a href="https://treinadores-de-ia.vercel.app/#qual" target="_blank" rel="noopener">Comparar as quatro ↗</a>
+      <span>A Invent Money é <b>uma de quatro</b> plataformas que pagam em dólar. Veja qual escolher.</span>
+      <a class="topbar-cta" href="https://treinadores-de-ia.vercel.app/" target="_blank" rel="noopener">
+        Comparar plataformas
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+      </a>
     </div>
   </div>
 
@@ -360,28 +336,6 @@
         <p>{{ emptyMsg }}</p>
       </div>
     </sc-if>
-
-    <!-- Direcionamento para o site oficial -->
-    <div class="cross">
-      <div class="cross-eyebrow">CURADORIA PESSOAL</div>
-      <h2>A Invent Money é uma das quatro.</h2>
-      <p>Estas tarefas são da Invent Money — a plataforma que aceita mais tipos de gravação, doméstica <b>e</b> comercial. Em compensação, ela paga em cripto, não tem bônus e não tem programa de indicação.</p>
-      <p>A <b>Claru.ai</b>, a <b>Hub.xyz</b> e a <b>Crowtado</b> pedem o mesmo tipo de vídeo, pagam via Pix e ainda dão bônus por marco de horas gravadas — na Claru o escalonamento chega a US$ 1.000. Eu testei, gravei e saquei nas quatro antes de indicar qualquer uma.</p>
-      <div class="cross-stats">
-        <span class="cross-stat">4 plataformas testadas</span>
-        <span class="cross-stat">US$ 5 a 8 por hora</span>
-        <span class="cross-stat">Saque em Pix</span>
-        <span class="cross-stat">Zero experiência</span>
-      </div>
-      <div class="cross-cta">
-        <a class="cross-btn cross-dark" href="https://treinadores-de-ia.vercel.app/#qual" target="_blank" rel="noopener">Comparar as 4 plataformas →</a>
-        <a class="cross-btn cross-wa" href="https://chat.whatsapp.com/JpKJ1EOIvu80TYWF23MaBq" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" style="width:17px; height:17px; fill:currentColor; stroke:none;"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.6-6c-.3-.1-1.6-.8-1.9-.9-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.6.1-1.5-.6-2.6-1.7-3.4-3-.2-.3 0-.5.1-.6l.5-.6c.1-.2.1-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-.9 2.5.2 1.4 1 2.6 1.8 3.6 1.1 1.4 2.5 2.5 4.2 3 .9.3 1.8.5 2.7.3.7-.1 1.5-.6 1.8-1.3.2-.4.2-.9.2-1.1-.1-.1-.2-.2-.5-.3z"/></svg>
-          Entrar na comunidade
-        </a>
-        <a class="cross-link" href="https://treinadores-de-ia.vercel.app/#ganhar" target="_blank" rel="noopener">Calcular quanto dá pra ganhar ↗</a>
-      </div>
-    </div>
 
   </div>
 
@@ -616,11 +570,6 @@
               <div style="font-size:13.5px; line-height:1.6; color:var(--n800);">A gravação está desativada em computadores. A webcam de um notebook ou desktop fica fixa à sua frente, então não consegue captar a visão em primeira pessoa pela qual estas tarefas são avaliadas. Grave pelo celular ou use a aba <strong>Enviar</strong> para mandar um arquivo gravado em outro dispositivo.</div>
             </div>
 
-            <div class="mcross">
-              <div class="mcross-eyebrow">ANTES DE COMEÇAR</div>
-              <p>Esta tarefa é da Invent Money. Vale ver como ela se compara com Claru.ai, Hub.xyz e Crowtado — bônus, forma de saque e tempo de aprovação mudam bastante entre elas.</p>
-              <a href="https://treinadores-de-ia.vercel.app/#qual" target="_blank" rel="noopener">Comparar plataformas →</a>
-            </div>
           </div>
         </div>
       </div>
