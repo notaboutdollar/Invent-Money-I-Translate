@@ -72,6 +72,39 @@
   .clear:hover{ background:var(--n300); }
 
   .count{ font-size:14px; color:var(--n600); margin:0 0 18px; }
+  .count a, .count span.link{ color:var(--accent); font-weight:600; cursor:pointer; margin-left:4px; }
+  .count a:hover, .count span.link:hover{ text-decoration:underline; }
+
+  /* ---- toolbar / filters ---- */
+  .toolbar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; position:relative; z-index:5; }
+  .fbtn{ display:inline-flex; align-items:center; gap:9px; background:var(--surface); border-radius:var(--r-pill);
+         padding:13px 18px; box-shadow:var(--sh-soft); cursor:pointer; font-size:14.5px; font-weight:600;
+         color:var(--text); border:1.5px solid transparent; transition:border-color .15s, box-shadow .15s; flex:none; }
+  .fbtn:hover{ box-shadow:var(--sh-md); }
+  .fbtn-on{ border-color:var(--accent-200); }
+  .fbtn svg{ color:var(--n600); }
+  .fbadge{ display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px;
+           padding:0 6px; border-radius:var(--r-pill); background:var(--accent); color:#fff;
+           font-size:11.5px; font-weight:700; }
+  .fchev{ color:var(--n500); transition:transform .15s; }
+  .fchev-open{ transform:rotate(180deg); }
+  .toolbar .search{ flex:1; min-width:260px; }
+
+  .fscrim{ position:fixed; inset:0; z-index:39; background:transparent; }
+  .fpanel{ position:absolute; top:calc(100% + 10px); left:0; z-index:40; background:var(--surface);
+           border-radius:var(--r-md); box-shadow:var(--sh-lg); padding:20px; min-width:320px; }
+  .frow{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .flabel{ font-size:11.5px; font-weight:700; letter-spacing:.1em; color:var(--n500);
+           display:flex; align-items:center; gap:6px; }
+  .flabel svg{ color:var(--n400); }
+  .fclear{ font-size:13px; color:var(--accent); cursor:pointer; font-weight:600; }
+  .fclear:hover{ text-decoration:underline; }
+  .fopts{ display:flex; gap:8px; flex-wrap:wrap; }
+  .fopt{ padding:9px 16px; border-radius:var(--r-pill); background:var(--n100); color:var(--n700);
+         font-size:13.5px; font-weight:600; cursor:pointer; border:1.5px solid transparent; }
+  .fopt:hover{ background:var(--n200); }
+  .fopt-on{ background:var(--accent-100); color:var(--accent-700); border-color:var(--accent); }
+  .fopt-on:hover{ background:var(--accent-100); }
   .count b{ color:var(--text); font-weight:700; }
 
   /* ---- cards ---- */
@@ -187,6 +220,37 @@
         <h1 class="title">Tarefas disponíveis</h1>
         <p class="sub">Grave vídeos em primeira pessoa e receba por hora aprovada.</p>
       </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="fbtn {{ filterBtnClass }}" onClick="{{ toggleFilter }}">
+        <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+        Filtros
+        <sc-if value="{{ hasLocalFilter }}" hint-placeholder-val="{{ false }}">
+          <span class="fbadge">1</span>
+        </sc-if>
+        <svg class="ic ic-sm fchev {{ filterChevClass }}" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+
+      <sc-if value="{{ filterOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="fscrim" onClick="{{ closeFilter }}"></div>
+        <div class="fpanel" onClick="{{ stopProp }}">
+          <div class="frow">
+            <span class="flabel">
+              <svg class="ic ic-sm" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="8"/><path d="M12 16v-4M12 8v.1"/></svg>
+              LOCAL
+            </span>
+            <sc-if value="{{ hasLocalFilter }}" hint-placeholder-val="{{ false }}">
+              <span class="fclear" onClick="{{ clearLocal }}">Limpar</span>
+            </sc-if>
+          </div>
+          <div class="fopts">
+            <div class="fopt {{ optAllClass }}" onClick="{{ setLocalAll }}">Todos</div>
+            <div class="fopt {{ optResClass }}" onClick="{{ setLocalRes }}">Residencial</div>
+            <div class="fopt {{ optComClass }}" onClick="{{ setLocalCom }}">Comércio</div>
+          </div>
+        </div>
+      </sc-if>
 
       <div class="search">
         <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -199,8 +263,11 @@
       </div>
     </div>
 
-    <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
-      <p class="count"><b>{{ resultCount }}</b> {{ resultWord }} para “{{ q }}”</p>
+    <sc-if value="{{ hasActiveFilters }}" hint-placeholder-val="{{ false }}">
+      <p class="count">
+        <b>{{ resultCount }}</b> {{ countLabel }}
+        <span class="link" onClick="{{ clearAll }}">Limpar</span>
+      </p>
     </sc-if>
 
     <div class="grid">
@@ -241,7 +308,7 @@
       <div class="empty">
         <svg class="ic ic-lg" viewBox="0 0 24 24" style="color:#9b9797; width:34px; height:34px;"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
         <h3>Nenhuma tarefa encontrada</h3>
-        <p>Não achamos nada para “{{ q }}”. Tente outro termo.</p>
+        <p>{{ emptyMsg }}</p>
       </div>
     </sc-if>
 
@@ -488,7 +555,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { activeIndex: null, tab: 'how', q: '' };
+  state = { activeIndex: null, tab: 'how', q: '', local: 'all', filterOpen: false };
 
   renderVals() {
     const commonBefore = [
@@ -630,23 +697,23 @@ class Component extends DCLogic {
     };
 
     const tasks = [
-      { titulo: 'Agricultura e trabalho ao ar livre em uma empresa', descricao: 'Grave plantações, terrenos e materiais sendo trabalhados ao ar livre: plantio, colheita, separação e qualquer atividade semelhante.', valor: '8', min: 5, sent: null },
-      { titulo: 'Montagem e instalação na sua própria casa', descricao: 'Grave móveis e acessórios sendo montados e instalados: móveis para montar, prateleiras, fixação de TV e itens semelhantes.', valor: '5', min: 5, sent: null },
-      { titulo: 'Limpeza e organização na sua própria casa', descricao: 'Grave ambientes sendo desorganizados, arrumados e limpos (fora cozinha e lavanderia): descarte de itens, organização de armários e garagem.', valor: '5', min: 5, sent: null },
-      { titulo: 'Construção e obras em uma empresa', descricao: 'Grave trabalhos de obra, elétrica, hidráulica e acabamento em canteiro: pintura de imóveis, reforma, instalação elétrica e afins.', valor: '8', min: 5, sent: null },
-      { titulo: 'Eletrônicos e configuração de tecnologia na sua casa', descricao: 'Grave computadores, redes e equipamentos audiovisuais sendo montados, configurados e ajustados: montagem de PC, roteador e rede.', valor: '5', min: 5, sent: null },
-      { titulo: 'Fabricação e montagem em uma empresa', descricao: 'Grave materiais sendo cortados, unidos, acabados e montados: corte, junção, lixamento e atividades semelhantes.', valor: '8', min: 5, sent: null },
-      { titulo: 'Produção de alimentos em uma empresa', descricao: 'Grave alimentos sendo preparados, assados, empratados e embalados em uma linha de produção: preparo de massa, assar, empratar.', valor: '8', min: 5, sent: null },
-      { titulo: 'Logística e estocagem em uma empresa', descricao: 'Grave estoque sendo recebido, separado, embalado e expedido: recebimento, separação, embalagem e afins.', valor: '8', min: 5, sent: null },
-      { titulo: 'Manutenção externa na sua própria casa', descricao: 'Grave a área externa da sua casa sendo limpa, consertada e impermeabilizada: limpeza de calhas, lavagem com jato de pressão.', valor: '5', min: 5, sent: null },
-      { titulo: 'Pintura e acabamento de superfícies em casa', descricao: 'Grave paredes e madeiramento sendo preparados, pintados e acabados: pintura de parede interna, lixamento, envernizamento.', valor: '5', min: 5, sent: null },
-      { titulo: 'Cuidados com pets na sua própria casa', descricao: 'Grave animais de estimação sendo tosados e lavados, e o ambiente deles sendo limpo: tosa, banho, limpeza de caixa e afins.', valor: '5', min: 5, sent: null },
-      { titulo: 'Reparo e manutenção em uma empresa', descricao: 'Grave veículos e equipamentos sendo diagnosticados, revisados e reparados: diagnóstico de motor, troca de freios e pneus.', valor: '8', min: 5, sent: null },
-      { titulo: 'Reparos e consertos na sua própria casa', descricao: 'Grave móveis, paredes, portas e acessórios sendo consertados em casa: reparo de móveis, tapar buracos na parede, ajuste de porta.', valor: '5', min: 5, sent: null },
-      { titulo: 'Trabalho têxtil e de vestuário na sua casa', descricao: 'Grave roupas e sapatos sendo consertados e cuidados manualmente: costura, barra, troca de botão e afins.', valor: '5', min: 5, sent: null },
-      { titulo: 'Cuidados com veículos e bicicletas em casa', descricao: 'Grave seu próprio carro, moto ou bicicleta sendo lavado e revisado em casa: lavagem, verificação de óleo e fluidos, calibragem.', valor: '5', min: 5, sent: null },
-      { titulo: 'Limpeza e detalhamento de veículos em empresa', descricao: 'Grave veículos e espaços comerciais sendo limpos e detalhados: detalhamento interno, detalhamento externo e afins.', valor: '8', min: 5, sent: null },
-      { titulo: 'Trabalho no quintal e jardim em casa', descricao: 'Grave o seu quintal ou jardim sendo plantado, podado, cortado e regado: plantio, capina, poda e afins.', valor: '5', min: 5, sent: null },
+      { titulo: 'Agricultura e trabalho ao ar livre em uma empresa', descricao: 'Grave plantações, terrenos e materiais sendo trabalhados ao ar livre: plantio, colheita, separação e qualquer atividade semelhante.', valor: '8', min: 5, sent: null, local: 'comercial' },
+      { titulo: 'Montagem e instalação na sua própria casa', descricao: 'Grave móveis e acessórios sendo montados e instalados: móveis para montar, prateleiras, fixação de TV e itens semelhantes.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Limpeza e organização na sua própria casa', descricao: 'Grave ambientes sendo desorganizados, arrumados e limpos (fora cozinha e lavanderia): descarte de itens, organização de armários e garagem.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Construção e obras em uma empresa', descricao: 'Grave trabalhos de obra, elétrica, hidráulica e acabamento em canteiro: pintura de imóveis, reforma, instalação elétrica e afins.', valor: '8', min: 5, sent: null, local: 'comercial' },
+      { titulo: 'Eletrônicos e configuração de tecnologia na sua casa', descricao: 'Grave computadores, redes e equipamentos audiovisuais sendo montados, configurados e ajustados: montagem de PC, roteador e rede.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Fabricação e montagem em uma empresa', descricao: 'Grave materiais sendo cortados, unidos, acabados e montados: corte, junção, lixamento e atividades semelhantes.', valor: '8', min: 5, sent: null, local: 'comercial' },
+      { titulo: 'Produção de alimentos em uma empresa', descricao: 'Grave alimentos sendo preparados, assados, empratados e embalados em uma linha de produção: preparo de massa, assar, empratar.', valor: '8', min: 5, sent: null, local: 'comercial' },
+      { titulo: 'Logística e estocagem em uma empresa', descricao: 'Grave estoque sendo recebido, separado, embalado e expedido: recebimento, separação, embalagem e afins.', valor: '8', min: 5, sent: null, local: 'comercial' },
+      { titulo: 'Manutenção externa na sua própria casa', descricao: 'Grave a área externa da sua casa sendo limpa, consertada e impermeabilizada: limpeza de calhas, lavagem com jato de pressão.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Pintura e acabamento de superfícies em casa', descricao: 'Grave paredes e madeiramento sendo preparados, pintados e acabados: pintura de parede interna, lixamento, envernizamento.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Cuidados com pets na sua própria casa', descricao: 'Grave animais de estimação sendo tosados e lavados, e o ambiente deles sendo limpo: tosa, banho, limpeza de caixa e afins.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Reparo e manutenção em uma empresa', descricao: 'Grave veículos e equipamentos sendo diagnosticados, revisados e reparados: diagnóstico de motor, troca de freios e pneus.', valor: '8', min: 5, sent: null, local: 'comercial' },
+      { titulo: 'Reparos e consertos na sua própria casa', descricao: 'Grave móveis, paredes, portas e acessórios sendo consertados em casa: reparo de móveis, tapar buracos na parede, ajuste de porta.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Trabalho têxtil e de vestuário na sua casa', descricao: 'Grave roupas e sapatos sendo consertados e cuidados manualmente: costura, barra, troca de botão e afins.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Cuidados com veículos e bicicletas em casa', descricao: 'Grave seu próprio carro, moto ou bicicleta sendo lavado e revisado em casa: lavagem, verificação de óleo e fluidos, calibragem.', valor: '5', min: 5, sent: null, local: 'residencial' },
+      { titulo: 'Limpeza e detalhamento de veículos em empresa', descricao: 'Grave veículos e espaços comerciais sendo limpos e detalhados: detalhamento interno, detalhamento externo e afins.', valor: '8', min: 5, sent: null, local: 'comercial' },
+      { titulo: 'Trabalho no quintal e jardim em casa', descricao: 'Grave o seu quintal ou jardim sendo plantado, podado, cortado e regado: plantio, capina, poda e afins.', valor: '5', min: 5, sent: null, local: 'residencial' },
     ];
 
     const withHandlers = tasks.map((t, i) => ({
@@ -660,9 +727,14 @@ class Component extends DCLogic {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '');
     const query = norm(this.state.q).trim();
-    const visibleTasks = query
+    const bySearch = query
       ? withHandlers.filter((t) => norm(t.titulo + ' ' + t.descricao).includes(query))
       : withHandlers;
+
+    const local = this.state.local || 'all';
+    const visibleTasks = local === 'all'
+      ? bySearch
+      : bySearch.filter((t) => t.local === local);
 
     const cleaning = {
       tituloLong: 'Limpeza e organização na sua própria casa',
@@ -1638,15 +1710,43 @@ class Component extends DCLogic {
     const how = showHow ? segOn : segOff;
     const what = showWhat ? segOn : segOff;
 
+    const hasLocalFilter = local !== 'all';
+    const hasActiveFilters = query.length > 0 || hasLocalFilter;
+    const resultWord = visibleTasks.length === 1 ? 'tarefa encontrada' : 'tarefas encontradas';
+    const countLabel = query.length > 0
+      ? `${resultWord} para “${this.state.q}”`
+      : `de ${tasks.length} tarefas`;
+
     return {
       tasks: visibleTasks,
       q: this.state.q,
       hasQuery: query.length > 0,
-      noResults: query.length > 0 && visibleTasks.length === 0,
+      noResults: hasActiveFilters && visibleTasks.length === 0,
       resultCount: visibleTasks.length,
-      resultWord: visibleTasks.length === 1 ? 'tarefa encontrada' : 'tarefas encontradas',
+      resultWord,
+      countLabel,
+      emptyMsg: query.length > 0
+        ? `Não achamos nada para “${this.state.q}”. Tente outro termo.`
+        : 'Não há tarefas para este filtro no momento.',
+      hasActiveFilters,
       onSearch: (e) => this.setState({ q: e.target.value }),
       clearSearch: () => this.setState({ q: '' }),
+      clearAll: () => this.setState({ q: '', local: 'all', filterOpen: false }),
+
+      filterOpen: this.state.filterOpen,
+      hasLocalFilter,
+      filterBtnClass: hasLocalFilter ? 'fbtn-on' : '',
+      filterChevClass: this.state.filterOpen ? 'fchev-open' : '',
+      optAllClass: local === 'all' ? 'fopt-on' : '',
+      optResClass: local === 'residencial' ? 'fopt-on' : '',
+      optComClass: local === 'comercial' ? 'fopt-on' : '',
+      toggleFilter: () => this.setState({ filterOpen: !this.state.filterOpen }),
+      closeFilter: () => this.setState({ filterOpen: false }),
+      clearLocal: () => this.setState({ local: 'all' }),
+      setLocalAll: () => this.setState({ local: 'all' }),
+      setLocalRes: () => this.setState({ local: 'residencial' }),
+      setLocalCom: () => this.setState({ local: 'comercial' }),
+
       modalOpen: this.state.activeIndex !== null,
       noDetail: this.state.activeIndex !== null && !activeDetail,
       activeTask,
