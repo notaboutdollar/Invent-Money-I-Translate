@@ -118,6 +118,18 @@
   .topbar-cta:hover{ background:#332f2a; }
   .topbar-cta svg{ width:12px; height:12px; }
 
+  .foot-cta{ margin-top:40px; padding:44px 32px; background:#F4EFE7; border:1px solid #E4DDD0;
+             border-radius:var(--r-card); text-align:center; color:#0F0F0F; }
+  .foot-cta h3{ margin:0 0 10px; font-size:24px; font-weight:800; letter-spacing:-0.03em; line-height:1.2; }
+  .foot-cta p{ margin:0 0 22px; font-size:15px; line-height:1.5; color:#4a463f; max-width:52ch;
+               margin-left:auto; margin-right:auto; }
+  .foot-cta .btn-go{ display:inline-flex; align-items:center; gap:9px; padding:14px 26px;
+                     background:#0F0F0F; color:#fff; border-radius:var(--r-pill);
+                     font-weight:700; font-size:14.5px; text-decoration:none;
+                     transition:background .15s; }
+  .foot-cta .btn-go:hover{ background:#332f2a; }
+  .foot-cta .btn-go svg{ width:14px; height:14px; }
+
   .count b{ color:var(--text); font-weight:700; }
 
   /* ---- cards ---- */
@@ -218,6 +230,8 @@
     .modal{ max-height:100vh; border-radius:0; }
     .mbody{ padding:24px 20px 32px; }
     .topbar-in{ padding:11px 18px; text-align:center; gap:10px; font-size:13px; }
+    .foot-cta{ padding:32px 22px; margin-top:28px; }
+    .foot-cta h3{ font-size:21px; }
   }
 </style>
 </helmet>
@@ -336,6 +350,15 @@
         <p>{{ emptyMsg }}</p>
       </div>
     </sc-if>
+
+    <div class="foot-cta">
+      <h3>Existem outras 3 plataformas assim.</h3>
+      <p>Antes de cadastrar, dá uma olhada em qual paga melhor pra você. Testei as quatro e reuni tudo num só lugar.</p>
+      <a class="btn-go" href="https://treinadores-de-ia.vercel.app/" target="_blank" rel="noopener">
+        Ver comparação completa
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+      </a>
+    </div>
 
   </div>
 
